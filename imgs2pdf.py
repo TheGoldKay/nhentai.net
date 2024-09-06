@@ -18,5 +18,14 @@ def save_pdf(did):
     # Save the PDF file
     with open(os.path.join(image_dir, f'{name}.pdf'), 'wb') as file:
         file.write(pdf_content)
+    
+    for filename in os.listdir(image_dir):
+        if filename.endswith('.json') or filename.endswith('.pdf'):
+            continue
+        file_path = os.path.join(image_dir, filename)
+        try:
+            os.remove(file_path)
+        except Exception as e:
+            print(f"Error deleting file: {e}")
 
     print(f'{did} -> PDF file created successfully!')
