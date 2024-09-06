@@ -3,7 +3,8 @@ Download your favority doujinshi before nhentai.net shuts down
 
 ## Base Code Taken From: [nHentai Downloader](https://github.com/RicterZ/nhentai)
 
-Download all images | Saves an info.json file | Create pdf from images
+#### Download all images | Saves an info.json file | Create pdf from images
+
 **Developed in Ubuntu 24.04.1 LTS x86_64** **|** **Not Tested In Other OS(s)**
 
 ## Usage
