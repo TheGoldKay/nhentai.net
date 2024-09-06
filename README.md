@@ -7,8 +7,8 @@ Download your favority doujinshi before nhentai.net shuts down
 
 ## Usage
 ```bash
+conda create --name venv python=3.11 # I recommend using conda | Project runs on python 3.11
+conda activate venv # Activate venv
 pip install -r requirements.txt # Install requirements
 python main.py doujinshi_id # Download doujinshi with code id
 ```
-
-<span style="color:#FF8C00">I recommend creating a virtual environment before running the project</span>
