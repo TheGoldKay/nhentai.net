@@ -11,6 +11,8 @@ from nhentai.utils import generate_html, generate_cbz
 
 from imgs2pdf import save_pdf
 
+from save_favs import save_all_dids
+
 
 class DownloadHentai():
     def __init__(self, download_dir):
@@ -24,19 +26,20 @@ class DownloadHentai():
         info = Doujinshi(**doujinshi_parser(did), name_format='%i')
         info.downloader = Downloader(path=self.download_dir, size=5)
         info.download(regenerate_cbz=True)
-        self.save_info(info.get_data())
+        data = {key: val for key, val in info.table}
+        data["id"] = did
+        self.save_info(data)
 
 
-def main(did):
+def main():
     download_dir = os.path.join(os.getcwd(), 'download')
     download = DownloadHentai(download_dir)
-    download.test_download(did)
-    save_pdf(did)
+    save_all_dids()
+    with open("all_dids.txt", "r") as f:
+        for did in map(str.strip, f.readlines()):
+            download.test_download(did)
+            save_pdf(did)
     
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        did = sys.argv[1]
-        main(did)
-    else:
-        raise ValueError('No doujinshi id is provided')
+    main()
     

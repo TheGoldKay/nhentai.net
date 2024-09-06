@@ -6,54 +6,61 @@ from selenium.webdriver.firefox.service import Service
 from time import sleep
 import sys
 
-# Specify the path to the geckodriver
-geckodriver_path = "/snap/bin/geckodriver"
+def login_wait(driver):
+    # Navigate to the favorites page
+    driver.get("https://nhentai.net/favorites/")
+    while True:
+        try:
+            # Check if the user is logged in by looking for an element that is only visible when logged in
+            logged_in_element = WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.gallery-favorite")))
+            break
+        except:
+            # If the element is not found, wait for 5 seconds and try again
+            sleep(5)
 
-# Create a Service instance
-service = Service(geckodriver_path)
+    # Now the user is logged in, you can proceed with the rest of the code
+    print("User is logged in!")
 
-# Create a WebDriver instance
-driver = webdriver.Firefox(service=service)
+def save_doujinshi(driver):
+    did = 1
+    page = "https://nhentai.net/favorites/?page={}"
+    all_dids = []
 
-# Navigate to the favorites page
-driver.get("https://nhentai.net/favorites/")
+    while True:
+        try:
+            driver.get(page.format(did))
+            
+            # Wait for the page to load and the data-id elements to be present
+            WebDriverWait(driver, 8).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.gallery-favorite")))
 
-# Wait for the user to log in
-while True:
-    try:
-        # Check if the user is logged in by looking for an element that is only visible when logged in
-        logged_in_element = WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.gallery-favorite")))
-        break
-    except:
-        # If the element is not found, wait for 5 seconds and try again
-        sleep(5)
+            # Extract the data-id elements
+            data_id_elements = driver.find_elements(By.CSS_SELECTOR, "div.gallery-favorite")
 
-# Now the user is logged in, you can proceed with the rest of the code
-print("User is logged in!")
+            # Extract the data-id values
+            data_ids = [element.get_attribute("data-id") for element in data_id_elements]
+            print(f"Data IDs: {data_ids}\n")
+            all_dids.extend(data_ids)
+        except:
+            print(f"\n\nGran Total: {len(all_dids)}")
+            with open("all_dids.txt", "w") as f:
+                f.write("\n".join(all_dids))
+            # Close the browser
+            driver.quit()
+            break
+        did += 1
 
-did = 1
-page = "https://nhentai.net/favorites/?page={}"
-all_dids = []
+def save_all_dids():
+    # Specify the path to the geckodriver
+    geckodriver_path = "/snap/bin/geckodriver"
 
-while True:
-    try:
-        driver.get(page.format(did))
-        
-        # Wait for the page to load and the data-id elements to be present
-        WebDriverWait(driver, 8).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.gallery-favorite")))
+    # Create a Service instance
+    service = Service(geckodriver_path)
 
-        # Extract the data-id elements
-        data_id_elements = driver.find_elements(By.CSS_SELECTOR, "div.gallery-favorite")
+    # Create a WebDriver instance
+    driver = webdriver.Firefox(service=service)
+    
+    # User Interactive Login
+    login_wait(driver)
 
-        # Extract the data-id values
-        data_ids = [element.get_attribute("data-id") for element in data_id_elements]
-        print(f"Data IDs: {data_ids}\n")
-        all_dids.extend(data_ids)
-    except:
-        print(f"\n\nGran Total: {len(all_dids)}")
-        with open("all_dids.txt", "w") as f:
-            f.write("\n".join(all_dids))
-        # Close the browser
-        driver.quit()
-        sys.exit(0)
-    did += 1
+    # download all doujinshis
+    save_doujinshi(driver)
