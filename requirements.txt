@@ -1,0 +1,15 @@
+beautifulsoup4==4.12.3
+certifi==2024.8.30
+charset-normalizer==3.3.2
+Deprecated==1.2.14
+idna==3.8
+img2pdf==0.5.1
+lxml==5.3.0
+packaging==24.1
+pikepdf==9.2.1
+pillow==10.4.0
+requests==2.32.3
+soupsieve==2.6
+tabulate==0.9.0
+urllib3==2.2.2
+wrapt==1.16.0

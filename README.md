@@ -8,3 +8,7 @@ Download your favorites before nhentai.net goes down
 ### python main.py doujinshi_id
 #### Download all images, also saves an info.json with data about the doujinshi and also
 #### one pdf file with all pages of the doujinshi.
+
+
+##### Python: 3.11.9
+##### Run: pip install -r requirements.txt
